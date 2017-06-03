@@ -24,7 +24,7 @@ public class Encryptor extends CipherCommand {
     }
 
     @Override
-    public void execute(Path path) throws IOException {
+    public void execute(Path path) throws IOException, ClassNotFoundException {
         AlgorithmFactoryMenu algorithmFactoryMenu = new AlgorithmFactoryMenu(keySupplier);
         Path pathParent = path.getParent();
         Path encryptionDirectory = Paths.get(pathParent.toString(), "encryption");
@@ -36,15 +36,8 @@ public class Encryptor extends CipherCommand {
         }
         Algorithm<?> algorithm = algorithmFactoryMenu.getElement().get();
         algorithm.supplyValidKeyToAlgorithm();
+        algorithm.createKeyBinFile(pathParent);
         Files.walkFileTree(path, new EncryptFiles(pathParent, algorithm));
-        Path keyPath = Paths.get(encryptionDirectory.toString(), "key.bin");
-        try {
-            Files.createFile(keyPath);
-        } catch (FileAlreadyExistsException e) {
-            Files.delete(keyPath);
-            Files.createFile(keyPath);
-        }
-        algorithm.writeKey(keyPath);
         System.out.println("Encryption Process ended successfully");
     }
 }

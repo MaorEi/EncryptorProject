@@ -15,5 +15,5 @@ public abstract class CipherCommand {
         this.keySupplier = keySupplier;
     }
 
-    public abstract void execute(Path path) throws IOException;
+    public abstract void execute(Path path) throws IOException, ClassNotFoundException;
 }

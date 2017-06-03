@@ -22,7 +22,7 @@ public class Decryptor extends CipherCommand {
         super(keySupplier);
     }
 
-    public void execute(Path path) throws IOException {
+    public void execute(Path path) throws IOException, ClassNotFoundException {
         AlgorithmFactoryMenu algorithmFactoryMenu = new AlgorithmFactoryMenu(keySupplier);
         Path pathParent = path.getParent();
         Path decryptionDirectory = Paths.get(pathParent.toString(), "decryption");
@@ -35,14 +35,7 @@ public class Decryptor extends CipherCommand {
         }
         Algorithm<?> algorithm = algorithmFactoryMenu.getElement().get();
         algorithm.supplyValidKeyToAlgorithm();
-        Files.walkFileTree(path, new DecryptFiles(path.getParent(), algorithmFactoryMenu.getElement().get()));
-        Path keyPath = Paths.get(decryptionDirectory.toString(),"key.bin");
-        try {
-            Files.createFile(keyPath);
-        }catch (FileAlreadyExistsException e){
-            Files.delete(keyPath);
-            Files.createFile(keyPath);
-        }
+        Files.walkFileTree(path, new DecryptFiles(path.getParent(), algorithm));
         System.out.println("Decryption Process ended successfully");
     }
 }

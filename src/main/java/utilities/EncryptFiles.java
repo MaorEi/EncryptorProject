@@ -6,7 +6,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.security.Key;
+
 
 /**
  * Created by Maor on 5/27/2017.
@@ -14,7 +14,6 @@ import java.security.Key;
 public class EncryptFiles extends SimpleFileVisitor<Path> {
     private Path encryptionDirectoryParent;
     private Algorithm<?> algorithm;
-
 
     public EncryptFiles(Path encryptionDirectoryParent, Algorithm<?> algorithm) {
         this.encryptionDirectoryParent = encryptionDirectoryParent;

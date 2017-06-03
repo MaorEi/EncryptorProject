@@ -1,5 +1,7 @@
 package ciphercommands;
 
+import suppliers.FileKeySupplier;
+import suppliers.FilePathSupplier;
 import suppliers.RandomKeySupplier;
 import suppliers.UserKeySupplier;
 import utilities.Menu;
@@ -13,7 +15,7 @@ public class CipherCommandMenu extends Menu<CipherCommand> {
     @Override
     public void intializeMap() {
         map.put("encryptor", new Encryptor(new RandomKeySupplier()));
-        map.put("decryptor", new Decryptor(new UserKeySupplier()));
+        map.put("decryptor", new Decryptor(new FileKeySupplier<>()));
     }
 
     public CipherCommandMenu(){

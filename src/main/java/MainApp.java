@@ -11,7 +11,7 @@ import java.io.IOException;
  * Created by Maor on 5/27/2017.
  */
 public class MainApp {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         Injector injector = Guice.createInjector(new CipherCommandModule());
         CipherCommand cipherCommand = new CipherCommandMenu().getElement();
         FilePathSupplier filePathSupplier = new FilePathSupplier();

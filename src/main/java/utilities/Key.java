@@ -8,6 +8,10 @@ import java.io.Serializable;
 public class Key<T> implements Serializable{
     private T value;
 
+    public Key(T value) {
+        this.value = value;
+    }
+
     public T getValue() {
         return value;
     }

@@ -9,11 +9,11 @@ import java.util.Scanner;
  */
 public class FilePathSupplier {
     public Path supplyFilePath(){
-        System.out.println("Enter File path");
+        System.out.println("Enter File path:");
         Scanner scanner = new Scanner(System.in);
         File file;
         while (!(file = new File(scanner.nextLine())).exists()){
-            System.out.println("Enter File path");
+            System.out.println("Enter File path:");
         }
         return file.toPath();
     }
