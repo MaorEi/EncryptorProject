@@ -1,10 +1,8 @@
 package algorithms;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import suppliers.KeySupplier;
-import validators.EvenKeyValidator;
-import validators.KeyValidator;
+import validators.OddKeyValidator;
 
 /**
  * Created by Maor on 5/23/2017.
@@ -13,7 +11,7 @@ public class MwoAlgorithm extends Algorithm<Integer> {
 
     @Inject
     public MwoAlgorithm(KeySupplier<Integer> keySupplier) {
-        super(new EvenKeyValidator(), keySupplier);
+        super(new OddKeyValidator(), keySupplier);
     }
 
     @Override
@@ -25,10 +23,10 @@ public class MwoAlgorithm extends Algorithm<Integer> {
     @Override
     public Integer decryptByte(Integer byteToDecrypt, Integer key) {
         int i = 1;
-        Byte mwoResult = 1;
-        while (i < 256 && (mwoResult = (byte) (key * i)) != 1) {
+        while ((byte) (key * i) != 1) {
             i++;
         }
+        Byte mwoResult = (byte) (byteToDecrypt * i);
         return mwoResult.intValue();
     }
 }

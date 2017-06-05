@@ -20,6 +20,14 @@ public class Tuple<T,K> {
         return second;
     }
 
+    public void setFirst(T first) {
+        this.first = first;
+    }
+
+    public void setSecond(K second) {
+        this.second = second;
+    }
+
     public String toString(){
         return "first valeu: " + first.toString() + System.getProperty("line.separator") + "second value:" + second.toString() + "\n";
     }

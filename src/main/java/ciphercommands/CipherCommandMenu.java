@@ -1,9 +1,7 @@
 package ciphercommands;
 
-import suppliers.FileKeySupplier;
-import suppliers.FilePathSupplier;
+import suppliers.KeyPathSupplier;
 import suppliers.RandomKeySupplier;
-import suppliers.UserKeySupplier;
 import utilities.Menu;
 
 import java.util.HashMap;
@@ -15,10 +13,10 @@ public class CipherCommandMenu extends Menu<CipherCommand> {
     @Override
     public void intializeMap() {
         map.put("encryptor", new Encryptor(new RandomKeySupplier()));
-        map.put("decryptor", new Decryptor(new FileKeySupplier<>()));
+        map.put("decryptor", new Decryptor(new KeyPathSupplier<>()));
     }
 
     public CipherCommandMenu(){
-        super(new HashMap<>(), "enter cipher command", "cipher cammand isn't exist");
+        super(new HashMap<>(), "Enter Cipher Command", "Cipher Command doesn't exist");
     }
 }

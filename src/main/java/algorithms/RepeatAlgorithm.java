@@ -1,23 +1,25 @@
 package algorithms;
 
+import suppliers.RepeatKeySupplier;
+import utilities.Tuple;
+import validators.RepeatKeyValidator;
+
 /**
  * Created by Maor on 5/26/2017.
  */
-public class RepeatAlgorithm<T> extends Algorithm<T> {
+public class RepeatAlgorithm<T> extends Algorithm<Tuple<T, Integer>> {
 
-    Integer repeats;
     Algorithm<T> algorithm;
 
-    public RepeatAlgorithm(Algorithm<T> algorithm, Integer repeats) {
-        super(algorithm.getKeyValidator(), algorithm.getKeySupplier());
+    public RepeatAlgorithm(Algorithm<T> algorithm) {
+        super(new RepeatKeyValidator<>(algorithm.getKeyValidator()), new RepeatKeySupplier<T>(algorithm.getKeySupplier()));
         this.algorithm = algorithm;
-        this.repeats = repeats;
     }
 
     @Override
-    public Integer encryptByte(Integer byteToEncrypt, T key) {
-
-        for (int i = 0; i < repeats; i++) {
+    public Integer encryptByte(Integer byteToEncrypt, Tuple<T, Integer> repeatKey) {
+        T key = repeatKey.getFirst();
+        for (int i = 0; i < repeatKey.getSecond(); i++) {
             byteToEncrypt = algorithm.encryptByte(byteToEncrypt, key);
         }
 
@@ -25,9 +27,9 @@ public class RepeatAlgorithm<T> extends Algorithm<T> {
     }
 
     @Override
-    public Integer decryptByte(Integer byteToDecrypt, T key) {
-
-        for (int i = 0; i < repeats; i++) {
+    public Integer decryptByte(Integer byteToDecrypt, Tuple<T, Integer> repeatKey) {
+        T key = repeatKey.getFirst();
+        for (int i = 0; i < repeatKey.getSecond(); i++) {
             byteToDecrypt = algorithm.decryptByte(byteToDecrypt, key);
         }
 

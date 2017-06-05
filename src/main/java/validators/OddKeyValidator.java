@@ -3,7 +3,7 @@ package validators;
 /**
  * Created by Maor on 5/23/2017.
  */
-public class EvenKeyValidator implements KeyValidator<Integer> {
+public class OddKeyValidator implements KeyValidator<Integer> {
 
     SingleKeyValidator singleKeyValidator = new SingleKeyValidator();
 

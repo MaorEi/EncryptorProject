@@ -16,7 +16,7 @@ public class AlgorithmFactoryMenu extends Menu<Supplier<Algorithm<?>>> {
     private KeySupplier<Integer> keySupplier;
 
     public AlgorithmFactoryMenu(KeySupplier<Integer> keySupplier) {
-        super(new HashMap<>(), "Enter Algorithm", "Algorithm is invalid");
+        super(new HashMap<>(), "Enter Algorithm:", "Algorithm is invalid:");
         this.keySupplier = keySupplier;
     }
 
@@ -34,7 +34,7 @@ public class AlgorithmFactoryMenu extends Menu<Supplier<Algorithm<?>>> {
         map.put("repeat", () -> {
             Algorithm<?> algorithm = getElement().get();
             System.out.println("Enter number of repeats:");
-            return new RepeatAlgorithm<>(algorithm, new Scanner(System.in).nextInt());
+            return new RepeatAlgorithm<>(algorithm);
         });
         map.put("double", () -> {
             setHeaderMessage("Enter first algorithm");
