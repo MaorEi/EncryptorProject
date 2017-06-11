@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Maor on 6/5/2017.
  */
-public class SingleKeyValidatorTest {
+public class SingleKeySaverValidatorTest {
 
     private SingleKeyValidator singleKeyValidator = new SingleKeyValidator();
 

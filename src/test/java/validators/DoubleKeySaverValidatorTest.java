@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Maor on 6/5/2017.
  */
-public class DoubleKeyValidatorTest {
+public class DoubleKeySaverValidatorTest {
     DoubleKeyValidator<Integer, Integer> doubleKeyValidator = new DoubleKeyValidator<>(new SingleKeyValidator(),new OddKeyValidator());
 
     @Test

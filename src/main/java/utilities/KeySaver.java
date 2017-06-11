@@ -5,10 +5,10 @@ import java.io.Serializable;
 /**
  * Created by Maor on 5/29/2017.
  */
-public class Key<T> implements Serializable{
+public class KeySaver<T> implements Serializable{
     private T value;
 
-    public Key(T value) {
+    public KeySaver(T value) {
         this.value = value;
     }
 

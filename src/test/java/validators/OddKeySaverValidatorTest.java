@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Maor on 6/5/2017.
  */
-public class OddKeyValidatorTest {
+public class OddKeySaverValidatorTest {
     OddKeyValidator evenKeyValidator = new OddKeyValidator();
 
     @Test

@@ -14,6 +14,6 @@ public class EncryptorTest {
     @Test
     public void testExecute() throws Exception {
         Encryptor encryptor = new Encryptor(new RandomKeySupplier());
-        encryptor.execute(Paths.get("C:/Users/Maor/Desktop/missions.txt"));
+        //encryptor.execute(Paths.get("C:/Users/Maor/Desktop/missions.txt"));
     }
 }

@@ -2,7 +2,7 @@ package algorithms;
 
 import suppliers.KeySupplier;
 import suppliers.ValidKeySupplier;
-import utilities.Key;
+import utilities.KeySaver;
 import validators.KeyValidator;
 
 import java.io.*;
@@ -32,15 +32,15 @@ public abstract class Algorithm<T> {
     }
 
     public void createKeyBinFile(Path keyBinFileFolder) throws IOException {
-        Key<T> key = new Key<>(this.key);
-        Path keyBinFilePath = Paths.get(keyBinFileFolder.toString(),"key.bin");
+        KeySaver<T> key = new KeySaver<>(this.key);
+        Path keyBinFilePath = Paths.get(keyBinFileFolder.toString(), "key.bin");
         try {
             Files.createFile(keyBinFilePath);
         } catch (FileAlreadyExistsException e) {
             Files.delete(keyBinFilePath);
             Files.createFile(keyBinFilePath);
         }
-        ObjectOutputStream objectOutputStream= new ObjectOutputStream(Files.newOutputStream(keyBinFilePath));
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(Files.newOutputStream(keyBinFilePath));
         objectOutputStream.writeObject(key);
         System.out.println("Serialized key data is saved in " + keyBinFilePath.toString());
 

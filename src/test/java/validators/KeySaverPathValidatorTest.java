@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Maor on 6/5/2017.
  */
-public class KeyPathValidatorTest {
+public class KeySaverPathValidatorTest {
     KeyPathValidator keyPathValidator = new KeyPathValidator();
 
     @Test

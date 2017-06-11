@@ -1,6 +1,6 @@
 package suppliers;
 
-import utilities.Key;
+import utilities.KeySaver;
 import validators.KeyPathValidator;
 
 import java.io.FileInputStream;
@@ -22,7 +22,7 @@ public class KeyPathSupplier<T> implements KeySupplier<T> {
         FileInputStream fileInputStream = new FileInputStream(keyPath.toFile());
         ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
         @SuppressWarnings("unchecked")
-        Key<T> key = (Key<T>) objectInputStream.readObject();
+        KeySaver<T> key = (KeySaver<T>) objectInputStream.readObject();
         return key.getValue();
     }
 }

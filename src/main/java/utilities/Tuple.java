@@ -1,9 +1,11 @@
 package utilities;
 
+import java.io.Serializable;
+
 /**
  * Created by Maor on 5/23/2017.
  */
-public class Tuple<T,K> {
+public class Tuple<T,K> implements Serializable {
     private T first;
     private K second;
 
