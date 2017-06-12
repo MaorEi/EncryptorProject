@@ -19,7 +19,7 @@ public class DecryptedFilesCreator extends SimpleFileVisitor<Path> {
         this.decryptionDirectoryParent = decryptionDirectoryParent;
     }
 
-    public ArrayList<Tuple<Path, Path>> getFilePathTuplesListToEncrypt() {
+    public ArrayList<Tuple<Path, Path>> getFilePathTuplesListToDecrypt() {
         return filePathTuplesListToEncrypt;
     }
 

@@ -22,6 +22,6 @@ public class AlgorithmConsumerTask implements Consumer<Tuple<Path,Path>> {
         System.out.println(Thread.currentThread().getName() + " Start working " + tuplePath.getFirst());
         consumer.accept(tuplePath);
         long endTime = System.nanoTime();
-        System.out.println(Thread.currentThread().getName() + " created " + tuplePath.getSecond() + TimeUnit.SECONDS.toSeconds(endTime - startTime));
+        System.out.println(Thread.currentThread().getName() + " created " + tuplePath.getSecond() + " " + (endTime - startTime) + " nanosec.");
     }
 }

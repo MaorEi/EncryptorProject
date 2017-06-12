@@ -1,5 +1,6 @@
 package algorithms;
 
+import suppliers.KeyPathSupplier;
 import suppliers.KeySupplier;
 import suppliers.ValidKeySupplier;
 import utilities.KeySaver;
@@ -28,7 +29,7 @@ public abstract class Algorithm<T> {
     }
 
     public void supplyValidKeyToAlgorithm() throws IOException, ClassNotFoundException {
-        this.key = new ValidKeySupplier<>(keySupplier, keyValidator).supplyKey();
+        setKey(new ValidKeySupplier<>(keySupplier, keyValidator).supplyKey());
     }
 
     public void createKeyBinFile(Path keyBinFileFolder) throws IOException {
@@ -44,6 +45,11 @@ public abstract class Algorithm<T> {
         objectOutputStream.writeObject(key);
         System.out.println("Serialized key data is saved in " + keyBinFilePath.toString());
 
+    }
+
+    public void supplyValidKeyBinValueToAlgorithm() throws IOException, ClassNotFoundException {
+        KeyPathSupplier<T> keyPathSupplier = new KeyPathSupplier<>();
+        setKey(new ValidKeySupplier<>(keyPathSupplier, keyValidator).supplyKey());
     }
 
     public void setKey(T key) {

@@ -36,21 +36,23 @@ public class ThreadModeTest {
     public void testActivateASync() throws Exception {
         listnerList.add(listner);
         Path directory = Files.createTempDirectory("root");
+        System.out.println(directory);
         Path directoryEncrypted = Files.createTempDirectory(directory, "encryption");
         Path currentPath;
         Path currentEncryptedPath;
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             currentPath = Files.createTempFile(directory, String.valueOf(i), ".txt");
-            currentEncryptedPath = Files.createTempFile(directoryEncrypted, currentPath.getFileName().toString(), "encrypted");
+            /*currentEncryptedPath = Files.createTempFile(directoryEncrypted, currentPath.getFileName().toString(), ".encrypted");*/
             OutputStream outputStream = Files.newOutputStream(currentPath);
-            for (int j = 0; j < 10000000; j++) {
+            for (int j = 0; j < 1000000; j++) {
                 outputStream.write(1);
             }
-            tuplePathList.add(new Tuple<>(currentPath, currentEncryptedPath));
+            /*tuplePathList.add(new Tuple<>(currentPath, currentEncryptedPath));*/
         }
 
-        doAnswer(new Answer<Void>() {
+
+       /* doAnswer(new Answer<Void>() {
             public Void answer(InvocationOnMock invocation) throws IOException {
                 InputStream inputStream = (InputStream) invocation.getArguments()[0];
                 OutputStream outputStream = (OutputStream) invocation.getArguments()[1];
@@ -66,6 +68,6 @@ public class ThreadModeTest {
                 e.printStackTrace();
             }
         }, tuplePathList, Executors.newFixedThreadPool(3), listnerList);
-        threadMode.activate("Encryption Test");
+        threadMode.activate("Encryption Test");*/
     }
 }

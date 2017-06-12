@@ -2,6 +2,7 @@ package ciphercommands;
 
 import algorithms.Algorithm;
 import algorithms.AlgorithmFactoryMenu;
+import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.apache.commons.io.FileUtils;
@@ -9,6 +10,7 @@ import suppliers.KeySupplier;
 import threads.AlgorithmConsumerTask;
 import threads.ThreadMode;
 import utilities.EncryptedFilesCreator;
+import utilities.Tuple;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -17,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -55,13 +58,13 @@ public class Encryptor extends CipherCommand {
         }, "Key bin file creation");
 
 
-        AlgorithmConsumerTask algorithmConsumerTask = new AlgorithmConsumerTask((tuplePath) -> {
+        Consumer<Tuple<Path, Path>> consumerTask = (tuplePath) -> {
             try {
                 algorithm.encrypt(Files.newInputStream(tuplePath.getFirst()), Files.newOutputStream(tuplePath.getSecond()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
+        };
 
         EncryptedFilesCreator encryptedFilesCreator = new EncryptedFilesCreator(pathParent);
         doEvent(() -> {
@@ -69,10 +72,11 @@ public class Encryptor extends CipherCommand {
             return null;
         }, "Encryption Tree creation");
 
-
-        ThreadMode threadMode = new ThreadMode(algorithmConsumerTask, encryptedFilesCreator.getFilePathTuplesListToEncrypt(), executorService, listnerList);
+        ThreadMode threadMode = new ThreadMode(consumerTask, encryptedFilesCreator.getFilePathTuplesListToEncrypt(), executorService, listnerList);
+        Stopwatch timer = Stopwatch.createStarted();
         threadMode.activate("Encryption");
         notifyAllEventEnded("Encryptor");
+        System.out.println("Finished in " + timer.stop());
     }
 
 }

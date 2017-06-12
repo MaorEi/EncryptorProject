@@ -5,19 +5,19 @@ import algorithms.AlgorithmFactoryMenu;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.apache.commons.io.FileUtils;
+import suppliers.KeyPathSupplier;
 import suppliers.KeySupplier;
 import threads.AlgorithmConsumerTask;
 import threads.ThreadMode;
-import utilities.DecryptFiles;
-import utilities.DecryptedFilesCreator;
-import utilities.EncryptFiles;
+import utilities.*;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Consumer;
 
 public class Decryptor extends CipherCommand {
 
@@ -42,17 +42,17 @@ public class Decryptor extends CipherCommand {
         final Algorithm<?> algorithm = (Algorithm<?>) doEvent(() -> algorithmFactoryMenu.getElement().get(), "Algorithm choosing");
 
         doEvent(() -> {
-            algorithm.supplyValidKeyToAlgorithm();
+            algorithm.supplyValidKeyBinValueToAlgorithm();
             return null;
-        }, "Key supplying");
+        }, "key.bin file supplying");
 
-        AlgorithmConsumerTask algorithmConsumerTask = new AlgorithmConsumerTask((tuplePath) -> {
+        Consumer<Tuple<Path, Path>> consumerTask = (tuplePath) -> {
             try {
                 algorithm.decrypt(Files.newInputStream(tuplePath.getFirst()), Files.newOutputStream(tuplePath.getSecond()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
+        };
 
         DecryptedFilesCreator decryptedFilesCreator = new DecryptedFilesCreator(path.getParent());
 
@@ -61,7 +61,7 @@ public class Decryptor extends CipherCommand {
             return null;
         }, "Decryption Tree creation");
 
-        ThreadMode threadMode = new ThreadMode(algorithmConsumerTask, decryptedFilesCreator.getFilePathTuplesListToEncrypt(), executorService, listnerList);
+        ThreadMode threadMode = new ThreadMode(consumerTask, decryptedFilesCreator.getFilePathTuplesListToDecrypt(), executorService, listnerList);
         threadMode.activate("Decryption");
         notifyAllEventEnded("Decryptor");
     }
