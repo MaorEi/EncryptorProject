@@ -1,35 +1,37 @@
 package ciphercommands;
 
+import com.google.common.base.Stopwatch;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import suppliers.KeySupplier;
-import utilities.Audible;
-import utilities.Listner;
+import utilities.EventNotifier;
 
-import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 /**
  * Created by Maor on 5/27/2017.
  */
-public abstract class CipherCommand extends Audible{
+public abstract class CipherCommand{
+    protected final Logger logger = Logger.getLogger(getClass());
+
     protected KeySupplier<Integer> keySupplier;
 
+    protected EventNotifier eventNotifier = new EventNotifier(logger);
+
     protected CipherCommand(KeySupplier<Integer> keySupplier) {
-        super(new ArrayList<>());
         this.keySupplier = keySupplier;
+        PropertyConfigurator.configure("log4j.properties");
     }
 
     public abstract void execute(Path path, ExecutorService executorService) throws Exception;
 
-    protected Object doEvent(Callable callable, String string) throws Exception {
-
-        notifyAllEventStarted(string);
+    protected Object doEvent(Callable callable, String eventName) throws Exception {
+        eventNotifier.notifyEventIsStarted(eventName);
+        Stopwatch timer = Stopwatch.createStarted();
         Object returnedObject = callable.call();
-        notifyAllEventEnded(string);
-
+        eventNotifier.notifyEventIsEnded(eventName,timer.stop());
         return returnedObject;
     }
 }

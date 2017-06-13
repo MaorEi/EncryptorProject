@@ -1,5 +1,6 @@
 package threads;
 
+import com.google.common.base.Stopwatch;
 import utilities.Tuple;
 
 import java.nio.file.Path;
@@ -18,10 +19,6 @@ public class AlgorithmConsumerTask implements Consumer<Tuple<Path,Path>> {
 
     @Override
     public void accept(Tuple<Path, Path> tuplePath) {
-        long startTime = System.nanoTime();
-        System.out.println(Thread.currentThread().getName() + " Start working " + tuplePath.getFirst());
         consumer.accept(tuplePath);
-        long endTime = System.nanoTime();
-        System.out.println(Thread.currentThread().getName() + " created " + tuplePath.getSecond() + " " + (endTime - startTime) + " nanosec.");
     }
 }

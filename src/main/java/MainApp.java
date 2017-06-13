@@ -22,7 +22,7 @@ public class MainApp {
         //Encryptor encryptor = new Encryptor(new RandomKeySupplier());
         //cipherCommand.execute(Paths.get("C:/Users/Maor/Desktop/directoryToEncrypt"));
         ExecutorService executorService = new ThreadModeExecutorFactoryMenu().getElement().get();
-        cipherCommand.registerListner(new EventListner());
+
         cipherCommand.execute(filePathSupplier.supplyPath(), executorService);
         /*Path pathExample = Paths.get("C:\\Users\\Maor\\Desktop\\encryption\\directoryToEncrypt\\hi.txt.encrypted");
         Files.createFile(pathExample);*/

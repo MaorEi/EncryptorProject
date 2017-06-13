@@ -1,5 +1,6 @@
 package algorithms;
 
+import org.apache.log4j.Logger;
 import suppliers.KeyPathSupplier;
 import suppliers.KeySupplier;
 import suppliers.ValidKeySupplier;
@@ -23,6 +24,8 @@ public abstract class Algorithm<T> {
 
     private T key;
 
+    private Logger logger = Logger.getLogger(getClass());
+
     public Algorithm(KeyValidator<T> keyValidator, KeySupplier<T> keySupplier) {
         this.keyValidator = keyValidator;
         this.keySupplier = keySupplier;
@@ -43,8 +46,7 @@ public abstract class Algorithm<T> {
         }
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(Files.newOutputStream(keyBinFilePath));
         objectOutputStream.writeObject(key);
-        System.out.println("Serialized key data is saved in " + keyBinFilePath.toString());
-
+        logger.info("Serialized key data is saved in " + keyBinFilePath.toString());
     }
 
     public void supplyValidKeyBinValueToAlgorithm() throws IOException, ClassNotFoundException {
@@ -52,7 +54,7 @@ public abstract class Algorithm<T> {
         setKey(new ValidKeySupplier<>(keyPathSupplier, keyValidator).supplyKey());
     }
 
-    public void setKey(T key) {
+    private void setKey(T key) {
         this.key = key;
     }
 

@@ -15,15 +15,14 @@ import java.util.function.Function;
 /**
  * Created by Maor on 6/6/2017.
  */
-public class ThreadMode extends Audible {
+public class ThreadMode {
 
-    private AlgorithmConsumerTask algorithmConsumerTask;
+    private Consumer<Tuple<Path,Path>> algorithmConsumerTask;
     private List<Tuple<Path, Path>> pathArrayList;
     private ExecutorService executorService;
 
-    public ThreadMode(Consumer<Tuple<Path, Path>> consumerTask, List<Tuple<Path, Path>> pathArrayList, ExecutorService executorService, List<Listner> listnerList) {
-        super(listnerList);
-        this.algorithmConsumerTask = new AlgorithmConsumerTask(consumerTask);
+    public ThreadMode(Consumer<Tuple<Path, Path>> consumerTask, List<Tuple<Path, Path>> pathArrayList, ExecutorService executorService) {
+        this.algorithmConsumerTask = consumerTask;
         this.pathArrayList = pathArrayList;
         this.executorService = executorService;
     }

@@ -6,10 +6,12 @@ import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import suppliers.KeySupplier;
-import threads.AlgorithmConsumerTask;
 import threads.ThreadMode;
 import utilities.EncryptedFilesCreator;
+import utilities.EventNotifier;
 import utilities.Tuple;
 
 import java.io.IOException;
@@ -17,15 +19,14 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * Created by Maor on 5/27/2017.
  */
 public class Encryptor extends CipherCommand {
+
     @Inject
     public Encryptor(@Named("random key supplier") KeySupplier<Integer> keySupplier) {
         super(keySupplier);
@@ -33,7 +34,8 @@ public class Encryptor extends CipherCommand {
 
     @Override
     public void execute(Path path, ExecutorService executorService) throws Exception {
-        notifyAllEventStarted("Encryptor");
+        PropertyConfigurator.configure("log4j.properties");
+        eventNotifier.notifyEventIsStarted("Encryptor");
         AlgorithmFactoryMenu algorithmFactoryMenu = new AlgorithmFactoryMenu(keySupplier);
 
         Path pathParent = path.getParent();
@@ -60,8 +62,15 @@ public class Encryptor extends CipherCommand {
 
         Consumer<Tuple<Path, Path>> consumerTask = (tuplePath) -> {
             try {
-                algorithm.encrypt(Files.newInputStream(tuplePath.getFirst()), Files.newOutputStream(tuplePath.getSecond()));
-            } catch (IOException e) {
+                doEvent(() -> {
+                    try {
+                        algorithm.encrypt(Files.newInputStream(tuplePath.getFirst()), Files.newOutputStream(tuplePath.getSecond()));
+                    } catch (IOException e) {
+                        logger.error(e.getMessage());
+                    }
+                    return null;
+                }, Thread.currentThread().getName() + " - Encryption of " + tuplePath.getFirst().toString());
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         };
@@ -72,11 +81,11 @@ public class Encryptor extends CipherCommand {
             return null;
         }, "Encryption Tree creation");
 
-        ThreadMode threadMode = new ThreadMode(consumerTask, encryptedFilesCreator.getFilePathTuplesListToEncrypt(), executorService, listnerList);
-        Stopwatch timer = Stopwatch.createStarted();
-        threadMode.activate("Encryption");
-        notifyAllEventEnded("Encryptor");
-        System.out.println("Finished in " + timer.stop());
+        ThreadMode threadMode = new ThreadMode(consumerTask, encryptedFilesCreator.getFilePathTuplesListToEncrypt(), executorService);
+        doEvent(() -> {
+            threadMode.activate("Encryption");
+            return null;
+        }, "Encryption");
     }
 
 }
