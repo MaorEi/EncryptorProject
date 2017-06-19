@@ -34,4 +34,11 @@ public abstract class CipherCommand{
         eventNotifier.notifyEventIsEnded(eventName,timer.stop());
         return returnedObject;
     }
+
+    protected void doEvent(Runnable runnable, String eventName){
+        eventNotifier.notifyEventIsStarted(eventName);
+        Stopwatch timer = Stopwatch.createStarted();
+        runnable.run();
+        eventNotifier.notifyEventIsEnded(eventName,timer.stop());
+    }
 }

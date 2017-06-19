@@ -48,8 +48,11 @@ public class Decryptor extends CipherCommand {
         final Algorithm<?> algorithm = (Algorithm<?>) doEvent(() -> algorithmFactoryMenu.getElement().get(), "Algorithm choosing");
 
         doEvent(() -> {
-            algorithm.supplyValidKeyBinValueToAlgorithm();
-            return null;
+            try {
+                algorithm.supplyValidKeyBinValueToAlgorithm();
+            } catch (IOException | ClassNotFoundException e) {
+                logger.error(e.getMessage());
+            }
         }, "key.bin file supplying");
 
         Consumer<Tuple<Path, Path>> consumerTask = (tuplePath) -> {
@@ -60,7 +63,6 @@ public class Decryptor extends CipherCommand {
                     } catch (IOException e) {
                         logger.error(e.getMessage());
                     }
-                    return null;
                 }, Thread.currentThread().getName() + " - Decryption of " + tuplePath.getFirst().toString());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -69,14 +71,20 @@ public class Decryptor extends CipherCommand {
 
         DecryptedFilesCreator decryptedFilesCreator = new DecryptedFilesCreator(path.getParent());
         doEvent(() -> {
-            Files.walkFileTree(path, decryptedFilesCreator);
-            return null;
+            try {
+                Files.walkFileTree(path, decryptedFilesCreator);
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
         }, "Decryption Tree creation");
 
         ThreadMode threadMode = new ThreadMode(consumerTask, decryptedFilesCreator.getFilePathTuplesListToDecrypt(), executorService);
         doEvent(() -> {
-            threadMode.activate("Decryption");
-            return null;
+            try {
+                threadMode.activate();
+            } catch (InterruptedException e) {
+                logger.error(e.getMessage());
+            }
         }, "Decryption");
     }
 }

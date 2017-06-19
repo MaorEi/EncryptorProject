@@ -17,7 +17,7 @@ import java.util.function.Function;
  */
 public class ThreadMode {
 
-    private Consumer<Tuple<Path,Path>> algorithmConsumerTask;
+    private Consumer<Tuple<Path, Path>> algorithmConsumerTask;
     private List<Tuple<Path, Path>> pathArrayList;
     private ExecutorService executorService;
 
@@ -27,23 +27,9 @@ public class ThreadMode {
         this.executorService = executorService;
     }
 
-    public void activate(String event) throws InterruptedException {
-        List<Callable<Void>> callables = new ArrayList<>();
-        pathArrayList.forEach((tuplePath) -> callables.add(() -> {
-            algorithmConsumerTask.accept(tuplePath);
-            return null;
-        }));
-        executorService.invokeAll(callables)
-                .stream()
-                .map(future -> {
-                    try {
-                        return future.get();
-                    } catch (Exception e) {
-                        throw new IllegalStateException(e);
-                    }
-                });
+    public void activate() throws InterruptedException {
+        pathArrayList.forEach((tuplePath) -> executorService.submit(() -> algorithmConsumerTask.accept(tuplePath)));
         executorService.shutdown();
+        executorService.awaitTermination(Integer.MAX_VALUE, TimeUnit.DAYS);
     }
-
-
 }

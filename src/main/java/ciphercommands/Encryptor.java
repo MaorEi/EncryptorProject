@@ -50,13 +50,19 @@ public class Encryptor extends CipherCommand {
         final Algorithm<?> algorithm = (Algorithm<?>) doEvent(() -> algorithmFactoryMenu.getElement().get(), "Algorithm choosing");
 
         doEvent(() -> {
-            algorithm.supplyValidKeyToAlgorithm();
-            return null;
+            try {
+                algorithm.supplyValidKeyToAlgorithm();
+            } catch (IOException | ClassNotFoundException e) {
+                logger.error(e.getMessage());
+            }
         }, "Key supplying");
 
         doEvent(() -> {
-            algorithm.createKeyBinFile(pathParent);
-            return null;
+            try {
+                algorithm.createKeyBinFile(pathParent);
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
         }, "Key bin file creation");
 
 
@@ -68,7 +74,6 @@ public class Encryptor extends CipherCommand {
                     } catch (IOException e) {
                         logger.error(e.getMessage());
                     }
-                    return null;
                 }, Thread.currentThread().getName() + " - Encryption of " + tuplePath.getFirst().toString());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -77,16 +82,21 @@ public class Encryptor extends CipherCommand {
 
         EncryptedFilesCreator encryptedFilesCreator = new EncryptedFilesCreator(pathParent);
         doEvent(() -> {
-            Files.walkFileTree(path, encryptedFilesCreator);
-            return null;
+            try {
+                Files.walkFileTree(path, encryptedFilesCreator);
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
         }, "Encryption Tree creation");
 
         ThreadMode threadMode = new ThreadMode(consumerTask, encryptedFilesCreator.getFilePathTuplesListToEncrypt(), executorService);
         doEvent(() -> {
-            threadMode.activate("Encryption");
-            return null;
-        }, "Encryption");
+            try {
+                threadMode.activate();
+            } catch (InterruptedException e) {
+                logger.error(e.getMessage());
+            }
+        },"Encryption");
     }
-
 }
 
